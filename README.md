@@ -52,6 +52,58 @@ It is important to note that the request is resolved to response body - it does 
 
 `useCaseConverter`: `boolean` - should the library convert all query params, request body and response body to camelCase. Defaults to `true`.
 
+## Rate Limits
+
+The MailerLite API has rate limits of **60 requests per minute per endpoint**. This SDK provides automatic rate limit handling with configurable retries:
+
+```javascript
+const mailerLite = MailerLite('YOUR_API_KEY', {
+  enableRateLimit: true,              // Enabled by default
+  rateLimitRetryAttempts: 3,          // Max retry attempts
+  rateLimitRetryDelay: 1000,          // Base delay between retries
+  
+  onRateLimitHit: (headers) => {
+    console.log('Rate limit hit:', headers.remaining);
+  }
+});
+```
+
+### Additional Rate Limit Features
+
+**Manual handling with utilities:**
+```javascript
+import { RateLimitUtils } from 'mailerlite-api-v2-node';
+
+if (RateLimitUtils.isRateLimitError(error)) {
+  const info = RateLimitUtils.getRateLimitInfo(error);
+  await RateLimitUtils.waitForRateLimit(info);
+}
+```
+
+**Function decorator for automatic retries:**
+```javascript
+import { withRateLimit } from 'mailerlite-api-v2-node';
+
+const safeGetSubscribers = withRateLimit(
+  async () => await mailerLite.getSubscribers(),
+  3 // max retries
+);
+```
+
+**Batch processing with rate limit awareness:**
+```javascript
+import { RateLimitBatchProcessor } from 'mailerlite-api-v2-node';
+
+const processor = new RateLimitBatchProcessor(
+  emailList,
+  async (email) => await mailerLite.addSubscriber(email)
+);
+
+const { results, errors } = await processor.processAll();
+```
+
+The SDK includes utilities for monitoring usage, calculating optimal batch sizes, and graceful degradation when approaching limits.
+
 ## Method reference
 
 For complete reference, visit the [official MailerLite API reference](https://developers.mailerlite.com/reference).

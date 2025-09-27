@@ -11,6 +11,12 @@ import subscribers from "./api/subscribers.js";
 import timezones from "./api/timezones.js";
 import webhooks from "./api/webhooks.js";
 import type { Options } from "./types/index.js";
+import {
+  RateLimitUtils,
+  RateLimitBatchProcessor,
+  withRateLimit,
+} from "./rateLimitUtils.js";
+import { RateLimitHandler } from "./rateLimit.js";
 
 const MailerLite: (apiKey: string, options?: Options) => any = (
   apiKey: string,
@@ -40,3 +46,11 @@ export { MailerLite };
 
 // Export types for consumers
 export type * from "./types/index.js";
+
+// Export rate limit utilities
+export {
+  RateLimitUtils,
+  RateLimitBatchProcessor,
+  withRateLimit,
+  RateLimitHandler,
+};

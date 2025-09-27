@@ -1,7 +1,8 @@
-import axios, { type AxiosInstance } from "axios";
+import axios, { type AxiosInstance, type AxiosError } from "axios";
 import camelCase from "camelcase-keys";
 import snakeCase from "snakecase-keys";
 import type { Options } from "./types/index.js";
+import { RateLimitHandler } from "./rateLimit.js";
 
 export default function MailerLiteClient(
   apiKey: string,
@@ -10,6 +11,11 @@ export default function MailerLiteClient(
     baseURL = "https://api.mailerlite.com/api/v2/",
     useCaseConverter = true,
     headers = {},
+    enableRateLimit = true,
+    rateLimitRetryAttempts = 3,
+    rateLimitRetryDelay = 1000,
+    onRateLimitHit,
+    onRateLimitRetry,
   }: Options = {},
 ): AxiosInstance {
   if (typeof apiKey !== "string") throw new Error("No API key provided");
@@ -27,6 +33,17 @@ export default function MailerLiteClient(
 
   const client: AxiosInstance = axios.create(axiosConfig);
 
+  // Initialize rate limit handler if enabled
+  const rateLimitHandler = enableRateLimit
+    ? new RateLimitHandler({
+        enableRateLimit,
+        rateLimitRetryAttempts,
+        rateLimitRetryDelay,
+        onRateLimitHit,
+        onRateLimitRetry,
+      })
+    : null;
+
   if (useCaseConverter) {
     client.interceptors.request.use(
       (request) => {
@@ -42,11 +59,54 @@ export default function MailerLiteClient(
 
   client.interceptors.response.use(
     (response) => {
+      // Handle rate limit information in successful responses
+      if (rateLimitHandler && response.headers) {
+        const rateLimitHeaders =
+          rateLimitHandler.parseRateLimitHeaders(response);
+        if (rateLimitHeaders && rateLimitHeaders.remaining <= 5) {
+          // Warn when approaching rate limit
+          console.warn(
+            `MailerLite API: Rate limit warning - ${rateLimitHeaders.remaining} requests remaining`,
+          );
+        }
+      }
+
       if (!useCaseConverter) return response.data;
 
       return camelCase(response.data, { deep: true });
     },
-    async (error) => await Promise.reject(error),
+    async (error: AxiosError) => {
+      // Handle rate limit errors if rate limiting is enabled
+      if (rateLimitHandler && rateLimitHandler.isRateLimitError(error)) {
+        try {
+          // Create a retry function that repeats the original request
+          const retryFn = async () => {
+            const config = error.config;
+            if (!config) throw error;
+
+            // Make the request again with the same configuration
+            const retryResponse = await client.request(config);
+            return retryResponse;
+          };
+
+          // Handle the rate limit with automatic retry
+          const retryResponse = await rateLimitHandler.handleRateLimit(
+            error,
+            retryFn,
+          );
+
+          // Apply the same response transformation as successful responses
+          if (!useCaseConverter) return retryResponse.data;
+          return camelCase(retryResponse.data, { deep: true });
+        } catch (rateLimitError) {
+          // If rate limit handling fails, reject with the rate limit error
+          return await Promise.reject(rateLimitError);
+        }
+      }
+
+      // For non-rate-limit errors, reject as usual
+      return await Promise.reject(error);
+    },
   );
 
   return client;

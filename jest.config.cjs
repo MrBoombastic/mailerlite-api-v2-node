@@ -1,23 +1,21 @@
 module.exports = {
-  name: "mailerlite-api-v2-node",
   testEnvironment: "node",
-  preset: "ts-jest/presets/default-esm",
-  extensionsToTreatAsEsm: [".ts"],
+  preset: "ts-jest",
+  testMatch: ["**/*.spec.ts", "**/*.test.ts"],
+  moduleFileExtensions: ["ts", "js", "json"],
   transform: {
-    "^.+\\.tsx?$": [
-      "ts-jest",
-      {
-        useESM: true,
-      },
-    ],
+    "^.+\\.ts$": "ts-jest",
   },
   setupFilesAfterEnv: ["jest-extended/all"],
-  transformIgnorePatterns: [
-    "node_modules/(?!(camelcase-keys|snakecase-keys|map-obj|quick-lru)/)",
-  ],
-  moduleNameMapping: {
+  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],
+  testTimeout: 10000,
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true,
+  // Mock problematic ESM modules
+  moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
+    "^camelcase-keys$": "<rootDir>/test/__mocks__/camelcase-keys.js",
+    "^snakecase-keys$": "<rootDir>/test/__mocks__/snakecase-keys.js",
   },
-  collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.d.ts"],
-  testMatch: ["**/__tests__/**/*.(ts|js)", "**/?(*.)(spec|test).(ts|js)"],
 };

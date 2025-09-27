@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from "axios";
 
-export interface Options {
+export interface Options extends RateLimitOptions {
   axiosOptions?: AxiosRequestConfig;
   baseURL?: string;
   useCaseConverter?: boolean;
@@ -269,4 +269,24 @@ export interface WebhooksResponse {
   limit: number;
   start: number;
   webhooks: any[];
+}
+
+export interface RateLimitHeaders {
+  limit: number;
+  remaining: number;
+  reset: Date;
+  retryAfter: number;
+}
+
+export interface RateLimitOptions {
+  enableRateLimit?: boolean;
+  rateLimitRetryAttempts?: number;
+  rateLimitRetryDelay?: number;
+  onRateLimitHit?: (headers: RateLimitHeaders) => void;
+  onRateLimitRetry?: (attempt: number, headers: RateLimitHeaders) => void;
+}
+
+export interface RateLimitError extends Error {
+  rateLimitHeaders: RateLimitHeaders;
+  isRateLimitError: true;
 }
