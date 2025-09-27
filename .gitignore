@@ -24,3 +24,6 @@ config.ts
 
 # local project files
 /local/
+
+
+debug/

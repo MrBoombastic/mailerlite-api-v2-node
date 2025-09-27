@@ -20,10 +20,10 @@ export class RateLimitHandler {
   parseRateLimitHeaders(response: AxiosResponse): RateLimitHeaders | null {
     const headers = response.headers;
 
-    const limit = headers['x-ratelimit-limit'];
-    const remaining = headers['x-ratelimit-remaining'];
-    const reset = headers['x-ratelimit-reset'];
-    const retryAfter = headers['x-ratelimit-retry-after'];
+    const limit = headers["x-ratelimit-limit"];
+    const remaining = headers["x-ratelimit-remaining"];
+    const reset = headers["x-ratelimit-reset"];
+    const retryAfter = headers["x-ratelimit-retry-after"];
 
     // If any required header is missing, return null
     if (!limit || !remaining || !reset || !retryAfter) {
@@ -54,10 +54,10 @@ export class RateLimitHandler {
       : null;
 
     const rateLimitError = new Error(
-      `Rate limit exceeded. ${rateLimitHeaders ? `Retry after ${rateLimitHeaders.retryAfter} seconds.` : 'Please try again later.'}`
+      `Rate limit exceeded. ${rateLimitHeaders ? `Retry after ${rateLimitHeaders.retryAfter} seconds.` : "Please try again later."}`
     ) as RateLimitError;
 
-    rateLimitError.name = 'RateLimitError';
+    rateLimitError.name = "RateLimitError";
     rateLimitError.isRateLimitError = true;
     rateLimitError.rateLimitHeaders = rateLimitHeaders || {
       limit: 60,
@@ -104,7 +104,7 @@ export class RateLimitHandler {
       try {
         return await retryFn();
       } catch (retryError) {
-        if (retryError instanceof Error && 'response' in retryError) {
+        if (retryError instanceof Error && "response" in retryError) {
           return await this.handleRateLimit(
             retryError as AxiosError,
             retryFn,
@@ -121,7 +121,7 @@ export class RateLimitHandler {
       try {
         return await retryFn();
       } catch (retryError) {
-        if (retryError instanceof Error && 'response' in retryError) {
+        if (retryError instanceof Error && "response" in retryError) {
           return await this.handleRateLimit(
             retryError as AxiosError,
             retryFn,
@@ -178,7 +178,7 @@ export class RateLimitHandler {
   logRateLimitInfo(response: AxiosResponse): void {
     const rateLimitHeaders = this.parseRateLimitHeaders(response);
     if (rateLimitHeaders) {
-      console.log(`Rate Limit Info:`, {
+      console.log("Rate Limit Info:", {
         limit: rateLimitHeaders.limit,
         remaining: rateLimitHeaders.remaining,
         resetTime: rateLimitHeaders.reset.toISOString(),

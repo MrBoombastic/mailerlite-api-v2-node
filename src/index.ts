@@ -10,7 +10,7 @@ import stats from "./api/stats.js";
 import subscribers from "./api/subscribers.js";
 import timezones from "./api/timezones.js";
 import webhooks from "./api/webhooks.js";
-import type { Options } from "./types/index.js";
+import type { Options, MailerLiteClient } from "./types/index.js";
 import {
   RateLimitUtils,
   RateLimitBatchProcessor,
@@ -18,7 +18,7 @@ import {
 } from "./rateLimitUtils.js";
 import { RateLimitHandler } from "./rateLimit.js";
 
-const MailerLite: (apiKey: string, options?: Options) => any = (
+const MailerLite: (apiKey: string, options?: Options) => MailerLiteClient = (
   apiKey: string,
   options: Options = {},
 ) => {

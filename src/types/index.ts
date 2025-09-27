@@ -290,3 +290,139 @@ export interface RateLimitError extends Error {
   rateLimitHeaders: RateLimitHeaders;
   isRateLimitError: true;
 }
+
+// API method return types
+export interface AccountApi {
+  getAccountRaw(): Promise<AccountWrap>;
+  getAccount(): Promise<Account>;
+  getMe(): Promise<Account>;
+}
+
+export interface BatchApi {
+  batch(requests: Batch[]): Promise<any[]>;
+}
+
+export interface CampaignsApi {
+  actOnCampaign(
+    campaignId: number,
+    action: CampaignAction,
+    data?: CampaignSendData,
+  ): Promise<any>;
+  getCampaigns(status?: CampaignStatus, params?: CampaignQuery): Promise<any>;
+  getCampaignCount(status?: CampaignStatus): Promise<number>;
+  createCampaign(campaign: CampaignData): Promise<any>;
+  getCampaign(campaignId: number): Promise<any>;
+  setCampaignContent(
+    campaignId: number,
+    content: CampaignContent,
+  ): Promise<any>;
+}
+
+export interface FieldsApi {
+  getFields(): Promise<any>;
+  createField(field: FieldData): Promise<any>;
+  updateField(fieldId: number, fieldUpdate: FieldUpdate): Promise<any>;
+  removeField(fieldId: number): Promise<any>;
+}
+
+export interface GroupsApi {
+  getGroups(params?: GroupQuery): Promise<any[]>;
+  searchGroups(groupName: string): Promise<any[]>;
+  getGroup(groupId: number): Promise<any>;
+  createGroup(group: GroupData): Promise<any>;
+  updateGroup(groupId: number, group: GroupData): Promise<any>;
+  removeGroup(groupId: number): Promise<{ success: boolean }>;
+  addSubscriberToGroup(
+    groupId: number,
+    subscriber: GroupSubscriberData,
+  ): Promise<any>;
+  addSubscribersToGroup(
+    groupId: number,
+    subscribers: GroupSubscriberData[],
+    importOptions?: GroupSubscriberFlags,
+  ): Promise<any>;
+  getSubscribersGroupImport(groupId: number, importId: number): Promise<any>;
+  getGroupSubscriber(groupId: number, subscriberId: number): Promise<any>;
+  getGroupSubscribers(
+    groupId: number,
+    params?: SubscriberGroupQuery,
+  ): Promise<any>;
+  getGroupSubscriberCount(groupId: number): Promise<number>;
+  getGroupSubscribersByType(
+    groupId: number,
+    subscriberType: SubscriberType,
+    params?: GroupQuery,
+  ): Promise<any>;
+  getGroupSubscribersCountByType(
+    groupId: number,
+    subscriberType: SubscriberType,
+  ): Promise<number>;
+  removeGroupSubscriber(
+    groupId: number,
+    subscriberIdentifier: number | string,
+  ): Promise<string>;
+}
+
+export interface SegmentsApi {
+  getSegments(params?: SegmentQuery): Promise<any[]>;
+  getSegmentsCount(params?: SegmentQuery): Promise<number>;
+  getSegmentsRaw(params?: SegmentQuery): Promise<SegmentsResponse>;
+}
+
+export interface SettingsApi {
+  getDoubleOptinStatus(): Promise<DoubleOptinStatus>;
+  hasEnabledDoubleOptin(): Promise<boolean>;
+  setDoubleOptin(isEnabled: boolean): Promise<DoubleOptinStatus>;
+  enableDoubleOptin(): Promise<DoubleOptinStatus>;
+  disableDoubleOptin(): Promise<DoubleOptinStatus>;
+}
+
+export interface StatsApi {
+  getStats(): Promise<Stats>;
+}
+
+export interface SubscribersApi {
+  getSubscribers(params?: SubscriberQuery): Promise<any>;
+  addSubscriber(subscriber: SubscriberData): Promise<any>;
+  getSubscriber(identifier: number | string): Promise<any>;
+  updateSubscriber(
+    identifier: number | string,
+    subscriber: SubscriberDataUpdate,
+  ): Promise<any>;
+  searchSubscribers(params?: SubscriberSearchQuery): Promise<any>;
+  getSubscriberActivity(identifier: number | string): Promise<any>;
+  getSubscriberActivityByType(
+    identifier: number | string,
+    activityType: SubscriberActivityType,
+  ): Promise<any>;
+  removeSubscriber(identifier: number | string): Promise<any>;
+  getSubscriberGroups(identifier: number | string): Promise<any>;
+}
+
+export interface TimezonesApi {
+  getTimezones(): Promise<Timezone[]>;
+  getTimezone(timezoneId: number): Promise<Timezone>;
+}
+
+export interface WebhooksApi {
+  getWebhooks(): Promise<any[]>;
+  getWebhooksCount(): Promise<number>;
+  getWebhooksRaw(): Promise<WebhooksResponse>;
+  getWebhook(webhookId: number): Promise<any>;
+  createWebhook(webhook: WebhookData): Promise<any>;
+  updateWebhook(webhookId: number, webhookUpdate: WebhookData): Promise<any>;
+  removeWebhook(webhookId: number): Promise<any>;
+}
+
+export interface MailerLiteClient
+  extends AccountApi,
+    BatchApi,
+    CampaignsApi,
+    FieldsApi,
+    GroupsApi,
+    SegmentsApi,
+    SettingsApi,
+    StatsApi,
+    SubscribersApi,
+    TimezonesApi,
+    WebhooksApi {}
