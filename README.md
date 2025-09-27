@@ -258,4 +258,4 @@ npm test
 
 ## License
 
-[MIT](https://github.com/zygos/mailerlite-v2-node/blob/master/LICENSE)
+[MIT](https://github.com/MrBoombastic/mailerlite-v2-node/blob/master/LICENSE)

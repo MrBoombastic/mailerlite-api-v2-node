@@ -55,7 +55,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zygos/mailerlite-api-v2-node.git"
+    "url": "git+https://github.com/MrBoombastic/mailerlite-api-v2-node.git"
   },
   "keywords": [
     "mailerlite",
@@ -63,9 +63,9 @@
     "api"
   ],
   "bugs": {
-    "url": "https://github.com/zygos/mailerlite-api-v2-node/issues"
+    "url": "https://github.com/MrBoombastic/mailerlite-api-v2-node/issues"
   },
-  "homepage": "https://github.com/zygos/mailerlite-api-v2-node#readme",
+  "homepage": "https://github.com/MrBoombastic/mailerlite-api-v2-node#readme",
   "files": [
     "dist/**/*"
   ]
