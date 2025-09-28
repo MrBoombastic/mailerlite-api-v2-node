@@ -11,7 +11,6 @@ const JSONBigIntParser = JSONbigint({
 });
 
 const idReviver = (key: string, value: any) => {
-  console.log(key, value);
   if (
     (key === "id" ||
       key.toLowerCase().endsWith("id") ||
