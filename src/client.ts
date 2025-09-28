@@ -3,11 +3,34 @@ import camelCase from "camelcase-keys";
 import snakeCase from "snakecase-keys";
 import type { Options } from "./types/index.js";
 import { RateLimitHandler } from "./rateLimit.js";
+import JSONbigint from "json-bigint";
+
+const JSONBigIntParser = JSONbigint({
+  storeAsString: true,
+  useNativeBigInt: false,
+});
+
+const idReviver = (key: string, value: any) => {
+  if (
+    (key === "id" ||
+      key.toLowerCase().endsWith("id") ||
+      key.toLowerCase().endsWith("_id")) &&
+    (typeof value === "number" || typeof value === "bigint")
+  ) {
+    return String(value);
+  }
+  return value;
+};
 
 export default function MailerLiteClient(
   apiKey: string,
   {
-    axiosOptions = {},
+    axiosOptions = {
+      transformResponse: (data: any) => {
+        const parsed = JSONBigIntParser.parse(data);
+        return JSON.parse(JSON.stringify(parsed), idReviver);
+      },
+    },
     baseURL = "https://api.mailerlite.com/api/v2/",
     useCaseConverter = true,
     headers = {},
@@ -22,6 +45,7 @@ export default function MailerLiteClient(
 
   const axiosConfig = {
     ...axiosOptions,
+
     baseURL,
     headers: {
       "Content-Type": "application/json",

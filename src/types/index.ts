@@ -230,7 +230,7 @@ export interface Timezone {
 }
 
 export interface Account {
-  id: number;
+  id: string;
   email: string;
   from: string;
   name: string;
@@ -359,7 +359,7 @@ export interface GroupsApi {
   ): Promise<number>;
   removeGroupSubscriber(
     groupId: number,
-    subscriberIdentifier: number | string,
+    subscriberIdentifier: string,
   ): Promise<string>;
 }
 
@@ -384,19 +384,19 @@ export interface StatsApi {
 export interface SubscribersApi {
   getSubscribers(params?: SubscriberQuery): Promise<any>;
   addSubscriber(subscriber: SubscriberData): Promise<any>;
-  getSubscriber(identifier: number | string): Promise<any>;
+  getSubscriber(identifier: string): Promise<any>;
   updateSubscriber(
-    identifier: number | string,
+    identifier: string,
     subscriber: SubscriberDataUpdate,
   ): Promise<any>;
   searchSubscribers(params?: SubscriberSearchQuery): Promise<any>;
-  getSubscriberActivity(identifier: number | string): Promise<any>;
+  getSubscriberActivity(identifier: string): Promise<any>;
   getSubscriberActivityByType(
-    identifier: number | string,
+    identifier: string,
     activityType: SubscriberActivityType,
   ): Promise<any>;
-  removeSubscriber(identifier: number | string): Promise<any>;
-  getSubscriberGroups(identifier: number | string): Promise<any>;
+  removeSubscriber(identifier: string): Promise<any>;
+  getSubscriberGroups(identifier: string): Promise<any>;
 }
 
 export interface TimezonesApi {
