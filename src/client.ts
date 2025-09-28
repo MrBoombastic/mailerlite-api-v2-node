@@ -11,6 +11,7 @@ const JSONBigIntParser = JSONbigint({
 });
 
 const idReviver = (key: string, value: any) => {
+  console.log(key, value);
   if (
     (key === "id" ||
       key.toLowerCase().endsWith("id") ||
@@ -27,6 +28,7 @@ export default function MailerLiteClient(
   {
     axiosOptions = {
       transformResponse: (data: any) => {
+        if (!data) return data;
         const parsed = JSONBigIntParser.parse(data);
         return JSON.parse(JSON.stringify(parsed), idReviver);
       },
