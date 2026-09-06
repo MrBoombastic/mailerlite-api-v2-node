@@ -13,6 +13,7 @@
   },
   "scripts": {
     "test": "npx jest --config jest.config.cjs",
+    "test:unit": "npx jest test/rateLimit.spec.ts --config jest.config.cjs",
     "test:watch": "npx jest --config jest.config.cjs --watch",
     "lint": "npx eslint ./src --ext .ts,.tsx",
     "lint:fix": "npx eslint ./src --fix --ext .ts,.tsx",
