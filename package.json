@@ -19,7 +19,10 @@
     "build": "tsc",
     "prepare": "npm run build"
   },
-  "author": "zygos, MrBoombastic",
+  "contributors": [
+    "zygos",
+    "MrBoombastic"
+  ],
   "license": "MIT",
   "dependencies": {
     "axios": "^1.18.1",
