@@ -31,7 +31,6 @@
     "snakecase-keys": "^9.0.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@types/jest": "^30.0.0",
     "@types/json-bigint": "^1.0.4",
@@ -40,17 +39,10 @@
     "@typescript-eslint/parser": "^8.62.1",
     "eslint": "^9.39.4",
     "globals": "^17.7.0",
-    "husky": "^9.1.7",
     "jest": "^30.4.2",
     "jest-extended": "^7.0.0",
     "ts-jest": "^29.4.11",
     "typescript": "^5.9.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
-    }
   },
   "directories": {
     "test": "test"
